@@ -1,0 +1,21 @@
+# Dependencies and build output
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Spec and report files (must never be committed)
+specs.md
+rida newz report (4).docx
+rida_newz_report_4.docx
+*.docx
+
+# Editor and OS files
+.DS_Store
+Thumbs.db
+*.log
