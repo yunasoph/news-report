@@ -8,54 +8,65 @@ A clean, fast, mobile-friendly React single-page web application that displays r
 - Browse news by category (`General`, `Business`, `Sports`, `Science`, `Health`, `Entertainment`, `Technology`)
 - Search articles by keyword (`/search/:query`)
 - Responsive dark-themed UI built with React, Bootstrap 5, and custom CSS
-- Open original articles directly via "Read more"
+- Lazy-loaded article images, skeleton loaders, error handling with retry, and `sessionStorage` response caching
+- Open original articles directly in a new tab via **Read more**
 
 ## Tech Stack
 
-- React.js (function components + hooks)
-- Vite
-- React Router (`react-router-dom`)
-- Axios
-- Bootstrap 5
-- GNews API v4 (`https://gnews.io/docs/`)
+- **Framework:** React.js (function components + hooks)
+- **Bundler:** Vite
+- **Routing:** React Router (`react-router-dom`)
+- **HTTP Client:** Axios
+- **Styling:** Bootstrap 5 + custom dark theme CSS
+- **API Provider:** [GNews API v4](https://gnews.io/docs/)
 
-## Setup
+## Getting Started
 
-1. Install dependencies:
+### 1. Install dependencies
 
-   ```bash
-   npm install
-   ```
+```bash
+npm install
+```
 
-2. Get a free API key from [GNews](https://gnews.io/).
+### 2. Obtain and configure a GNews API key
 
-3. Create a `.env` file in the project root (based on `.env.example`) and add your key:
+1. Create a free account at [gnews.io](https://gnews.io/) and copy your API key from the dashboard.
+2. Create a `.env` file in the project root (matching `.env.example`):
 
    ```env
    VITE_GNEWS_API_KEY=your_gnews_api_key_here
    ```
 
-## Scripts
+> **Note:** Never commit `.env` to version control. It is listed in `.gitignore`.
 
-- Run development server:
+### 3. Run in development
 
-  ```bash
-  npm run dev
-  ```
+```bash
+npm run dev
+```
 
-- Build for production:
+### 4. Build for production
 
-  ```bash
-  npm run build
-  ```
+```bash
+npm run build
+```
 
-- Preview production build locally:
+Preview the production bundle locally:
 
-  ```bash
-  npm run preview
-  ```
+```bash
+npm run preview
+```
+
+## Deployment Notes
+
+This app uses client-side routing via `BrowserRouter` (`/` , `/category/:type`, `/search/:query`):
+
+- **Netlify:** `public/_redirects` is included (`/* /index.html 200`) and automatically copied into `dist/` during `npm run build`.
+- **Vercel:** `vercel.json` is included with a rewrite rule forwarding all routes to `/index.html`.
+- **GitHub Pages:** Because GitHub Pages serves static subpaths without server rewrites by default, switch `BrowserRouter` in `src/main.jsx` to `HashRouter` if deploying directly to GitHub Pages.
+- **Environment variable:** Set `VITE_GNEWS_API_KEY` in your hosting provider's environment settings before building.
 
 ## Known Limitations
 
-- The GNews free plan enforces a daily request limit and restricts certain query features.
-- Requires an active internet connection to fetch live news articles.
+- The GNews free plan enforces a daily request limit (and per-second rate limits) and restricts some query capabilities.
+- An active internet connection is required to fetch news articles.
