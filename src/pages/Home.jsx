@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import NewsList from '../components/NewsList.jsx';
 import { getTopHeadlines } from '../services/newsService.js';
 
@@ -7,9 +7,12 @@ function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [retryCount, setRetryCount] = useState(0);
+  const forceRefreshRef = useRef(false);
 
   useEffect(() => {
     const controller = new AbortController();
+    const skipCache = forceRefreshRef.current;
+    forceRefreshRef.current = false;
 
     async function loadHeadlines() {
       setLoading(true);
@@ -18,7 +21,7 @@ function Home() {
       try {
         const data = await getTopHeadlines({
           signal: controller.signal,
-          skipCache: retryCount > 0,
+          skipCache,
         });
         if (!controller.signal.aborted) {
           setArticles(data);
@@ -39,6 +42,11 @@ function Home() {
     return () => controller.abort();
   }, [retryCount]);
 
+  const handleRetry = () => {
+    forceRefreshRef.current = true;
+    setRetryCount((count) => count + 1);
+  };
+
   return (
     <section>
       <h1 className="page-heading">News - Top General Headlines</h1>
@@ -46,7 +54,7 @@ function Home() {
         articles={articles}
         loading={loading}
         error={error}
-        onRetry={() => setRetryCount((count) => count + 1)}
+        onRetry={handleRetry}
       />
     </section>
   );

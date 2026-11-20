@@ -1,9 +1,23 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function SearchBar({ onSearchSubmit }) {
   const [query, setQuery] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname.startsWith('/search/')) {
+      const rawQuery = location.pathname.slice('/search/'.length);
+      try {
+        setQuery(decodeURIComponent(rawQuery));
+      } catch {
+        setQuery(rawQuery);
+      }
+    } else {
+      setQuery('');
+    }
+  }, [location.pathname]);
 
   const handleSubmit = (event) => {
     event.preventDefault();

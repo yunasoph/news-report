@@ -108,6 +108,12 @@ summary:focus-visible {
   width: 100%;
 }
 
+@media (max-width: 1199.98px) {
+  .search-form {
+    max-width: 100%;
+  }
+}
+
 .search-input {
   background-color: var(--bg-input);
   color: var(--text-primary);

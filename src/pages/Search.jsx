@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import NewsList from '../components/NewsList.jsx';
 import { searchNews } from '../services/newsService.js';
@@ -11,6 +11,7 @@ function Search() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [retryCount, setRetryCount] = useState(0);
+  const forceRefreshRef = useRef(false);
 
   useEffect(() => {
     if (!searchTerm) {
@@ -18,6 +19,8 @@ function Search() {
     }
 
     const controller = new AbortController();
+    const skipCache = forceRefreshRef.current;
+    forceRefreshRef.current = false;
 
     async function loadSearchResults() {
       setLoading(true);
@@ -26,7 +29,7 @@ function Search() {
       try {
         const data = await searchNews(searchTerm, {
           signal: controller.signal,
-          skipCache: retryCount > 0,
+          skipCache,
         });
         if (!controller.signal.aborted) {
           setArticles(data);
@@ -51,6 +54,11 @@ function Search() {
     return <Navigate to="/" replace />;
   }
 
+  const handleRetry = () => {
+    forceRefreshRef.current = true;
+    setRetryCount((count) => count + 1);
+  };
+
   return (
     <section>
       <h1 className="page-heading">News - Top {searchTerm} Headlines</h1>
@@ -58,7 +66,7 @@ function Search() {
         articles={articles}
         loading={loading}
         error={error}
-        onRetry={() => setRetryCount((count) => count + 1)}
+        onRetry={handleRetry}
       />
     </section>
   );
