@@ -1,8 +1,8 @@
 function ErrorMessage({ message, onRetry }) {
   return (
     <div className="status-panel" role="alert">
-      <h2 className="h5 text-white mb-2">Unable to load news</h2>
-      <p className="text-secondary mb-3">
+      <h2 className="h5 theme-text-primary mb-2">Unable to load news</h2>
+      <p className="theme-text-muted mb-3">
         {message || 'Something went wrong while fetching articles. Please try again.'}
       </p>
       {onRetry ? (

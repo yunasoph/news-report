@@ -13,13 +13,18 @@ const NAV_ITEMS = [
   { label: 'Technology', to: '/category/technology' },
 ];
 
-function NavBar() {
+function NavBar({ theme = 'dark', onToggleTheme }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const closeMenu = () => setIsExpanded(false);
+  const isLight = theme === 'light';
 
   return (
-    <nav className="navbar navbar-expand-xl navbar-dark sticky-top custom-navbar">
+    <nav
+      className={`navbar navbar-expand-xl ${
+        isLight ? 'navbar-light' : 'navbar-dark'
+      } sticky-top custom-navbar`}
+    >
       <div className="container-fluid px-3 px-lg-4">
         <Link className="brand-link me-lg-3" to="/" onClick={closeMenu}>
           <span className="brand-logo-badge" aria-hidden="true">
@@ -63,8 +68,54 @@ function NavBar() {
             ))}
           </ul>
 
-          <div className="d-flex mt-2 mt-xl-0">
+          <div className="d-flex flex-column flex-xl-row align-items-stretch align-items-xl-center gap-2 mt-2 mt-xl-0">
             <SearchBar onSearchSubmit={closeMenu} />
+            <button
+              type="button"
+              className="theme-toggle-btn"
+              onClick={onToggleTheme}
+              aria-label={isLight ? 'Switch to dark mode' : 'Switch to light mode'}
+              title={isLight ? 'Switch to dark mode' : 'Switch to light mode'}
+            >
+              {isLight ? (
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg>
+              ) : (
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="4" />
+                  <path d="M12 2v2" />
+                  <path d="M12 20v2" />
+                  <path d="m4.93 4.93 1.41 1.41" />
+                  <path d="m17.66 17.66 1.41 1.41" />
+                  <path d="M2 12h2" />
+                  <path d="M20 12h2" />
+                  <path d="m6.34 17.66-1.41 1.41" />
+                  <path d="m19.07 4.93-1.41 1.41" />
+                </svg>
+              )}
+              <span>{isLight ? 'Dark' : 'Light'}</span>
+            </button>
           </div>
         </div>
       </div>
